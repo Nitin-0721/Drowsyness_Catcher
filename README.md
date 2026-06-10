@@ -26,6 +26,7 @@ using facial landmarks, eye aspect ratio, and yawn detection.
 - NumPy (EAR/MAR calculations)
 
 ## 📁 Project Structure
+```
 DrowsyGuard/
 ├── utils/
 │   ├── ear_calculator.py  # Eye Aspect Ratio
@@ -37,7 +38,7 @@ DrowsyGuard/
 ├── alerts/                # Alarm sound
 ├── app.py                 # Flask entry point
 └── realtime_test.py       # Test without Flask
-
+```
 ## ⚙️ Setup
 ```bash
 # Install dependencies
