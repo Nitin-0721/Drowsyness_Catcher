@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrowsyGuard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0f0f0f;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #00ff88;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Video feed */
+        .video-box img {
+            width: 640px;
+            border-radius: 12px;
+            border: 3px solid #222;
+        }
+
+        /* Stats panel */
+        .stats {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 24px;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .status-box {
+            text-align: center;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: #111;
+            transition: all 0.3s;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 12px 16px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* Alert level colors */
+        .level-0 { color: #00ff88; border: 2px solid #00ff88; }
+        .level-1 { color: #ffaa00; border: 2px solid #ffaa00; }
+        .level-2 { color: #ff4444; border: 2px solid #ff4444; }
+        .level-3 { color: #ff0000; border: 2px solid #ff0000;
+                   animation: pulse 0.5s infinite; }
+
+        @keyframes pulse {
+            0%   { opacity: 1; }
+            50%  { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🚗 DrowsyGuard</h1>
+
+    <div class="container">
+        <!-- Live Video -->
+        <div class="video-box">
+            <img src="/video_feed" alt="Live Feed">
+        </div>
+
+        <!-- Stats Panel -->
+        <div class="stats">
+            <!-- Status -->
+            <div class="status-box level-0" id="status">AWAKE</div>
+
+            <!-- EAR -->
+            <div class="stat-row">
+                <span class="stat-label">👁 Eye Ratio (EAR)</span>
+                <span class="stat-value" id="ear">0.00</span>
+            </div>
+
+            <!-- MAR -->
+            <div class="stat-row">
+                <span class="stat-label">👄 Mouth Ratio (MAR)</span>
+                <span class="stat-value" id="mar">0.00</span>
+            </div>
+
+            <!-- Yawn Count -->
+            <div class="stat-row">
+                <span class="stat-label">🥱 Yawn Count</span>
+                <span class="stat-value" id="yawn_count">0</span>
+            </div>
+
+            <!-- Frame Counter -->
+            <div class="stat-row">
+                <span class="stat-label">🎞 Drowsy Frames</span>
+                <span class="stat-value" id="frame_counter">0</span>
+            </div>
+
+            <!-- Face Detected -->
+            <div class="stat-row">
+                <span class="stat-label">📷 Face</span>
+                <span class="stat-value" id="face">Detecting...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setInterval(() => {
+            fetch('/state')
+                .then(r => r.json())
+                .then(data => {
+                    // Update status box
+                    const statusEl = document.getElementById('status');
+                    statusEl.textContent = data.status;
+                    statusEl.className = `status-box level-${data.alert_level}`;
+
+                    // Update stats
+                    document.getElementById('ear').textContent = data.ear.toFixed(3);
+                    document.getElementById('mar').textContent = data.mar.toFixed(3);
+                    document.getElementById('yawn_count').textContent = data.yawn_count;
+                    document.getElementById('frame_counter').textContent = data.frame_counter;
+                    document.getElementById('face').textContent = data.face_detected ? '✅ Detected' : '❌ Not Found';
+                });
+        }, 500);
+    </script>
+</body>
+</html>

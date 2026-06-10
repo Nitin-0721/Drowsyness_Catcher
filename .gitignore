@@ -1,0 +1,21 @@
+
+# Model file (too large for github)
+face_landmarker.task
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Dataset (too large)
+dataset/
+
+# Virtual environment
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Generated files
+*.wav
